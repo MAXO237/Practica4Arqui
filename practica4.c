@@ -3,60 +3,72 @@
 #include <string.h>
 #include <math.h>
 
-
-
-void adicion(char opA[], char opB[], int lA, int lB) {
-    int acarreo = 0, auxiliar;
-    char *resultado = (char *)malloc(32 * sizeof(char)); // Reserva memoria dinámica para el resultado
+void adicion(char opA[], char opB[]){
+  int acarreo = 0, auxiliar;
+  char resultado[32];
   
-    while  (lB > 0) {    
-        lB = lB-1;
-        lA = lA-1;
-        printf("Al iniciar el ciclo el valor de lA es %i y el valor de lB es %i\n", lA, lB);
-        auxiliar = (opA[lA] - '0') + (opB[lB] - '0') + acarreo;
-        if (auxiliar >= 2){
-            acarreo = 1;
-            auxiliar = auxiliar-2;
-        }
-        else{
-            acarreo = 0;
-        }
-        resultado[lA] = auxiliar + '0';
-        printf("El indice %i del resultado es %c\n", lA, resultado[lA]);
-        printf("Al terminar el ciclo el valor de lA es %i y el valor de lB es %i\n\n", lA, lB);
+  for (int i = 0; i < 32; i++){
+    auxiliar = (opA[31-i] - '0') + (opB[31-i] - '0') + acarreo;
+    if (auxiliar >= 2){
+      acarreo = 1;
+      auxiliar = auxiliar-2;
     }
-  
-    printf("El resultado es %s\n", resultado);
-    free(resultado); // Libera la memoria asignada dinámicamente
-}
-
-
-
-
-void resta(char opA[], char opB[]){
-
-  int yaHayUno=0;
-
-  for (int i = 31; i >= 0; i--){
-    if (yaHayUno == 1){
-      if (opB[i] == '0' ){
-        opB[i] = '1';
-      } else if (opB[i] == '1'){
-        opB[i] = '0';
-      }
-    } else if(yaHayUno == 0){
-      if (opB[i] == '1'){
-        yaHayUno = 1;
-      }
-    }    
+    else{
+      acarreo = 0;
+    }
+    resultado[31-i]=auxiliar + '0';
   }
 
-  printf("El complemento A2 de opB es %s\n", opB);
-
-  adicion(opA, opB, 32, 32);
+  if (acarreo == 1){
+    resultado[0] = '1';
+  }
+  else{
+    for (int i = 0; i < strlen(resultado)-1; i++){
+      resultado[i] = resultado[i+1];
+    }
+    resultado[strlen(resultado) - 1] = '\0';
+  }
+  
+  printf("La suma de los números es %s\n", resultado);
 }
 
+void resta(char opA[], char opB[]){
+  for (int i = 0; i < 32; i++){
+    if (opB[i] == '0'){
+      opB[i] = '1';
+    }
+    else{
+      opB[i] = '0';
+    }
+  }
 
+  int acarreo = 1,auxiliar;
+  char resultado[32];
+  
+  for (int i = 0; i < 32; i++){
+    auxiliar = (opA[31-i] - '0') + (opB[31-i] - '0') + acarreo;
+    if (auxiliar >= 2){
+      acarreo = 1;
+      auxiliar = auxiliar-2;
+    }
+    else{
+      acarreo = 0;
+    }
+    resultado[31-i]=auxiliar + '0';
+  }
+
+  if (acarreo == 1){
+    resultado[0] = '1';
+  }
+  else{
+    for (int i = 0; i < strlen(resultado)-1; i++){
+      resultado[i] = resultado[i+1];
+    }
+    resultado[strlen(resultado) - 1] = '\0';
+  }
+  
+  printf("La resta de los números es %s\n", resultado);
+}
 
 void bitwiseAnd(char opA[], char opB[]){
   printf("\nAND de los números es ");
@@ -110,17 +122,14 @@ void menorQue(char opA[], char opB[]){
 }
 
 int main(int argc, char *argv[]){
-
-  if (argc != 4){
-    printf("Número no válido de argumentos. Ingresar la clave de la operación a realizar seguida de los operandos (32 bits)");
-    return 0;
-  }
-
   int lengthA = strlen(argv[2]);
   int lengthB = strlen(argv[3]);
   int lengthOp = strlen(argv[1]);
   
-  
+  if (argc != 4){
+    printf("\nNúmero no válido de argumentos. Ingresar la clave de la operación a realizar seguida de los operandos (32 bits)");
+    return 0;
+  }
   if (lengthA != 32 || lengthB != 32 || lengthOp != 3){
     printf("\nLos operandos deben ser cadenas de 32 bits y la operación a realizar debe tener 3 bits.");
     return 0;
@@ -134,11 +143,11 @@ int main(int argc, char *argv[]){
   if (strcmp("001",argv[1]) == 0){
     bitwiseOr(argv[2],argv[3]);
   }
-  //No funciona bien para casos de desbordamiento y de complemento a dos
+  //Función adición
   if (strcmp("010",argv[1]) == 0){
-    adicion(argv[2],argv[3],lengthA,lengthB);
+    adicion(argv[2],argv[3]);
   }
-  //Pendiente
+  //Función resta , depende de suma
   if (strcmp("011",argv[1]) == 0){
     resta(argv[2],argv[3]);
   }
@@ -146,9 +155,10 @@ int main(int argc, char *argv[]){
   if (strcmp("100",argv[1]) == 0){
     igualdad(argv[2],argv[3]);
   }
-  //No funciona para complemento a dos
+  //Funcion menor que
   if (strcmp("101",argv[1]) == 0){
     menorQue(argv[2],argv[3]);
   }
   return 0;
 }
+
