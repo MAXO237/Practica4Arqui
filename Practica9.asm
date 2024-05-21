@@ -15,7 +15,14 @@ main:
 	li $v0, 4		#Imprime una cadena
 	la $a0, prompt 		#Se carga la cadena de prompt
 	syscall			#Se imprime el prompt
-	
+		
+joke:
+	li $v0, 55		#Codigo para imprimir una cadena
+	la $a0, chiste1		#Guardamos el chiste1 en $a0
+	la $a1 1		#El argumento 1 significa que es un aviso
+	syscall			#Subimos el chiste como una ventana de aviso
+	#j main
+
 fin:
 	la $a0, pregunta_si_quiere_salir
 	li $v0, 50
@@ -25,10 +32,3 @@ fin:
 	
 	li $v0 10
 	syscall
-	
-joke:
-	li $v0, 55		#Codigo para imprimir una cadena
-	la $a0, chiste1		#Guardamos el chiste1 en $a0
-	la $a1 1		#El argumento 1 significa que es un aviso
-	syscall			#Subimos el chiste como una ventana de aviso
-	j main
