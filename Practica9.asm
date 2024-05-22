@@ -10,6 +10,7 @@ rev: .asciiz "rev"
 cat: .asciiz "cat"
 chiste1: .asciiz "Persona 1 - ¿Qué le dijo una papa a otra papa?\nPersona 2 - No sé, ¿qué le dijo?\nPersona 1 - Hola ( :,D )"
 pregunta_si_quiere_salir: .asciiz "¿Seguro que quieres salir?"
+mensaje_temporal: .asciiz "Comando por implementar"
 
 .text
 .globl main
@@ -42,6 +43,30 @@ main:
     	la $t8, exit             # Dirección de la cadena "exit"
     	jal comparacion_cadenas  # Llamar a la función de comparación de cadenas
     	beq $v0, 1, fin          # Si son iguales, saltar a fin
+    	
+    	#Comparar el input con "song"
+    	la $t7, buffer		# Dirección del buffer de entrada
+    	la $t8, song		# Dirección de la cadena "song"
+    	jal comparacion_cadenas  # Llamar a la función de comparación de cadenas
+    	beq $v0, 1, cancion          # Si son iguales, saltar a cancion
+    	
+    	#Comparar el input con "help"
+    	la $t7, buffer		# Dirección del buffer de entrada
+    	la $t8, help		# Dirección de la cadena "help"
+    	jal comparacion_cadenas  # Llamar a la función de comparación de cadenas
+    	beq $v0, 1, ayuda          # Si son iguales, saltar a ayuda
+    	
+    	#Comparar el input con "rev"
+    	la $t7, buffer		# Dirección del buffer de entrada
+    	la $t8, rev		# Dirección de la cadena "rev"
+    	jal comparacion_cadenas  # Llamar a la función de comparación de cadenas
+    	beq $v0, 1, reversa          # Si son iguales, saltar a rev
+    	
+    	#Comparar el input con "cat"
+    	la $t7, buffer		# Dirección del buffer de entrada
+    	la $t8, cat		# Dirección de la cadena "cat"
+    	jal comparacion_cadenas	# Llamar a la función de comparación de cadenas
+    	beq $v0, 1, concatenar
     	
     	# Si no encaja con ninguna de las opciones
 	li $v0, 55
@@ -95,6 +120,34 @@ chiste:
 	syscall			#Subimos el chiste como una ventana de aviso
 	j main
 	
+cancion:
+	# Imprime mensaje temporal, pues esta funcion no esta implementada aun
+	li $v0, 4			# Código de syscall para imprimir una cadena
+	la $a0, mensaje_temporal	# Cargar la dirección del mensaje temporal
+	syscall	
+	j main
+	
+ayuda: 	
+	# Imprime mensaje temporal, pues esta funcion no esta implementada aun
+	li $v0, 4			# Código de syscall para imprimir una cadena
+	la $a0, mensaje_temporal	# Cargar la dirección del mensaje temporal
+	syscall	
+	j main
+	
+reversa: 
+	# Imprime mensaje temporal, pues esta funcion no esta implementada aun
+	li $v0, 4			# Código de syscall para imprimir una cadena
+	la $a0, mensaje_temporal	# Cargar la dirección del mensaje temporal
+	syscall	
+	j main
+	
+concatenar:
+	# Imprime mensaje temporal, pues esta funcion no esta implementada aun
+	li $v0, 4			# Código de syscall para imprimir una cadena
+	la $a0, mensaje_temporal	# Cargar la dirección del mensaje temporal
+	syscall	
+	j main
+		
 fin:
 	la $a0, pregunta_si_quiere_salir
 	li $v0, 50

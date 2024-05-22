@@ -1,6 +1,6 @@
 #Programa en MIPS que lee un archivo.
 .data
-archivo: .asciiz "hola.txt"
+archivo: .asciiz "Prueba.txt"
 buffer: .space  256 # Buffer que contiene los datos del archivo.
 
 .text
